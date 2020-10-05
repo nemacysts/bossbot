@@ -13,8 +13,7 @@ class BossBot(Client):
         ping = f'<@!{self.user.id}>'
 
         if only_start:
-            first_word = message.split()[0]
-            return first_word == ping
+            return message.startswith(ping)
         else:
             return ping in message
 

@@ -48,9 +48,17 @@ def on_command(command_pattern):
     return decorator_on_command
 
 
+async def reply(message, response):
+    # remove the bot ping so that we're just quoting the actual message
+    message_content = message.content.split(">", maxsplit=1)[1].strip()
+    # and then add in the user that pinged us
+    user_tag = f'<@!{message.author.id}>'
+
+    await message.channel.send(f'> {message_content}\n{user_tag}: {response}')
+
 @on_command('ping')
 async def pingpong(bot, message):
-    await message.channel.send('pong')
+    await reply(message, 'pong')
 
 
 @on_command('choose')
@@ -58,14 +66,14 @@ async def choose(bot, message):
     split_msg = message.content.split(maxsplit=2)
     if len(split_msg) == 3:
         choosen = split_msg[2].split(',')
-        await message.channel.send(random.choice(choosen))
+        await reply(message, random.choice(choosen))
     else:
-        await message.channel.send('Give me something to choose from!')
+        await reply(message, 'Give me something to choose from!')
 
 
 @on_command('8ball')
 async def shake_8ball(bot, message):
-    await message.channel.send(random.choice([
+    await reply(message, random.choice([
         'It is decidedly so.',
         'You may rely on it.',
         'Outlook good.',
